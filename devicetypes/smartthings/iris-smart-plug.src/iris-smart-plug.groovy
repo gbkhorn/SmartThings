@@ -18,7 +18,7 @@
  
 metadata {
 	// Automatically generated. Make future change here.
-	definition (name: "Iris Smart Plug", namespace: "smartthings", author: "SmartThings") {
+	definition (name: "Iris Smart Plug", namespace: "gbkhorn", author: "gbkhorn") {
 		capability "Actuator"
 		capability "Switch"
 		capability "Power Meter"
