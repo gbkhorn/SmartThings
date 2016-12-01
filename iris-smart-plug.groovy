@@ -1,5 +1,5 @@
 /**
- *  Copyright 2015 SmartThings
+ *  Copyright 2016 SmartThings
  *
  *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  *  in compliance with the License. You may obtain a copy of the License at:
@@ -13,11 +13,12 @@
  *	SmartPower Outlet (CentraLite)
  *
  *	Author: SmartThings
- *	Date: 2015-08-23
+ *	Date: 2016-11-29
  */
+ 
 metadata {
 	// Automatically generated. Make future change here.
-	definition (name: "Iris Smart Plug", namespace: "blebson", author: "SmartThings") {
+	definition (name: "SmartPower Outlet", namespace: "gbkhorn", author: "SmartThings") {
 		capability "Actuator"
 		capability "Switch"
 		capability "Power Meter"
@@ -36,10 +37,6 @@ metadata {
 		command "resetEnergyUsage"
 			
 		fingerprint profileId: "0104", inClusters: "0000 0003 0004 0005 0006 0B04 0B05 FC03", outClusters: "0019", manufacturer: "CentraLite",  model: "3210-L", deviceJoinName: "Outlet"
-		//fingerprint profileId: "0104", inClusters: "0000,0003,0004,0005,0006,0B04,0B05", outClusters: "0019", manufacturer: "CentraLite",  model: "3200", deviceJoinName: "Outlet"
-		//fingerprint profileId: "0104", inClusters: "0000,0003,0004,0005,0006,0B04,0B05", outClusters: "0019", manufacturer: "CentraLite",  model: "3200-Sgb", deviceJoinName: "Outlet"
-		//fingerprint profileId: "0104", inClusters: "0000,0003,0004,0005,0006,0B04,0B05", outClusters: "0019", manufacturer: "CentraLite",  model: "4257050-RZHAC", deviceJoinName: "Outlet"
-		//fingerprint profileId: "0104", inClusters: "0000,0003,0004,0005,0006,0B04,0B05", outClusters: "0019"
 	}
 
 	// simulator metadata
@@ -83,7 +80,7 @@ metadata {
         
 		valueTile("energyDisplay", "device.energyDisplay", width: 5, height: 1, decoration: "flat") {
 			state "default", label:'Energy used: ${currentValue}', unit: "kWh"
-        	}
+        }
         	
 		standardTile("refresh", "device.switch", inactiveLabel: false, decoration: "flat", width: 1, height: 1) {
 			state "default", label:"", action:"refresh.refresh", icon:"st.secondary.refresh"
@@ -161,7 +158,7 @@ def calculateAndShowEnergy()
     }
     
     sendEvent(name: "energy", value: energyValue, displayed: false)
-    sendEvent(name: "energyDisplay", value: String.format("%6.3f kWh",energyValue), displayed: false)
+    sendEvent(name: "energyDisplay", value: String.format("%6.3f kWh", energyValue), displayed: false)
 
     def currentTime = Calendar.getInstance().getTimeInMillis()   
     def timeDifference = ((long)currentTime - state.timerStart)/1000; // in seconds
@@ -208,7 +205,7 @@ def updated() {
 def powerConfig() {
 	[
 		"zdo bind 0x${device.deviceNetworkId} 1 ${endpointId} 0x0B04 {${device.zigbeeId}} {}", "delay 200",
-		"zcl global send-me-a-report 0x0B04 0x050B 0x29 ${intervalMin ?: 5} ${intervalMax ?: 600} {05 00}",				//The send-me-a-report is custom to the attribute type for CentraLite
+		"zcl global send-me-a-report 0x0B04 0x050B 0x29 ${intervalMin ?: 5} ${intervalMax ?: 600} {05 00}", //The send-me-a-report is custom to the attribute type for CentraLite
 		"send 0x${device.deviceNetworkId} 1 ${endpointId}", "delay 500"
 	]
 }
